@@ -10,7 +10,7 @@ slim = tf.contrib.slim
 image_dir = './dataset/test/'
 images_list = sorted([os.path.join(image_dir, file) for file in os.listdir(image_dir) if file.endswith('.png')])
 
-checkpoint_dir = "./checkpoint_mfb"
+checkpoint_dir = "./checkpoint"
 checkpoint = tf.train.latest_checkpoint(checkpoint_dir)
 
 num_initial_blocks = 1
@@ -52,7 +52,7 @@ label_to_colours =    {0: [128,128,128],
                      11: [0,0,0]}
 
 #Create the photo directory
-photo_dir = checkpoint_dir + "/test_images"
+photo_dir = checkpoint_dir + "/images"
 if not os.path.exists(photo_dir):
     os.mkdir(photo_dir)
 
@@ -61,8 +61,8 @@ def grayscale_to_colour(image):
     print 'Converting image...'
     image = image.reshape((360, 480, 1))
     image = np.repeat(image, 3, axis=-1)
-    for i in xrange(image.shape[0]):
-        for j in xrange(image.shape[1]):
+    for i in range(image.shape[0]):
+        for j in range(image.shape[1]):
             label = int(image[i][j][0])
             image[i][j] = np.array(label_to_colours[label])
 
@@ -103,11 +103,11 @@ with tf.Graph().as_default() as graph:
     
     with sv.managed_session() as sess:
 
-        for i in xrange(len(images_list) / 10 + 1):
+        for i in range(len(images_list) / 10 + 1):
             segmentations = sess.run(predictions)
             # print segmentations.shape
 
-            for j in xrange(segmentations.shape[0]):
+            for j in range(segmentations.shape[0]):
                 #Stop at the 233rd image as it's repeated
                 if i*10 + j == 223:
                     break
